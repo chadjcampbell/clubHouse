@@ -1,24 +1,39 @@
+const dotenv = require("dotenv").config();
 const express = require("express");
-require("dotenv").config();
-const path = require("path");
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
-const User = require("./models/userModel");
-
-const mongoDb = process.env.MONGO_URI;
-mongoose.connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true });
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "mongo connection error"));
+const cors = require("cors");
+const userRoute = require("./routes/userRoute");
+const cookieParser = require("cookie-parser");
+const path = require("path");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
+// middlwares
+app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  })
+);
 
-app.get("/", (req, res) => res.render("index"));
+// routes middleware
+app.use("/api/users", userRoute);
 
-app.listen(3000, () => console.log("app listening on port 3000!"));
+// routes
+app.get("/", (req, res) => {
+  res.send("Home Page");
+});
+
+// connect to DB and start server
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => console.log(err));
