@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "clubhouse server",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "backend": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongoose": "^7.2.4",
+    "nodemon": "^2.0.22",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  }
+}
