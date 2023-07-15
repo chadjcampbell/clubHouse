@@ -137,8 +137,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id);
+  if (user) {
     const { _id, name, email, isMember, isAdmin } = user;
     res.status(200).json({
       _id,
@@ -147,7 +147,7 @@ const getUser = asyncHandler(async (req, res) => {
       isMember,
       isAdmin,
     });
-  } catch {
+  } else {
     res.status(400);
     throw new Error("User not found");
   }
@@ -168,8 +168,8 @@ const loginStatus = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
+  try {
+    const user = await User.findById(req.user._id);
     const { name, email, isMember, isAdmin } = user;
     user.email = email;
     user.name = req.body.name || name;
@@ -184,7 +184,7 @@ const updateUser = asyncHandler(async (req, res) => {
       isMember: updatedUser.isMember,
       isAdmin: updatedUser.isAdmin,
     });
-  } else {
+  } catch {
     res.status(404);
     throw new Error("User not found");
   }
