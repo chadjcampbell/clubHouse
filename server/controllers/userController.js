@@ -3,9 +3,6 @@ const { body, validationResult } = require("express-validator");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const Token = require("../models/tokenModel");
-const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
@@ -17,7 +14,7 @@ const registerUser = [
     .trim()
     .isLength({ min: 3 })
     .escape()
-    .withMessage("Name must be specified."),
+    .withMessage("Name must be 3 or more characters."),
   body("password")
     .trim()
     .isLength({ min: 6, max: 24 })
@@ -56,14 +53,13 @@ const registerUser = [
         });
 
         if (user) {
-          const { _id, name, email, photo, phone, bio } = user;
+          const { _id, name, email, isMember, isAdmin } = user;
           res.status(201).json({
             _id,
             name,
             email,
-            photo,
-            phone,
-            bio,
+            isMember,
+            isAdmin,
             token,
           });
         } else {
@@ -111,14 +107,13 @@ const loginUser = [
             sameSite: "none",
             secure: true,
           });
-          const { _id, name, email, photo, phone, bio } = user;
+          const { _id, name, email, isMember, isAdmin } = user;
           res.status(200).json({
             _id,
             name,
             email,
-            photo,
-            phone,
-            bio,
+            isMember,
+            isAdmin,
             token,
           });
         } else {
@@ -144,14 +139,13 @@ const logoutUser = asyncHandler(async (req, res) => {
 const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
-    const { _id, name, email, photo, phone, bio } = user;
+    const { _id, name, email, isMember, isAdmin } = user;
     res.status(200).json({
       _id,
       name,
       email,
-      photo,
-      phone,
-      bio,
+      isMember,
+      isAdmin,
     });
   } else {
     res.status(400);
@@ -176,20 +170,19 @@ const loginStatus = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
-    const { name, email, photo, phone, bio } = user;
+    const { name, email, isMember, isAdmin } = user;
     user.email = email;
     user.name = req.body.name || name;
-    user.phone = req.body.phone || phone;
-    user.photo = req.body.photo || photo;
-    user.bio = req.body.bio || bio;
+    user.isMember = req.body.isMember || isMember;
+    user.isAdmin = req.body.isAdmin || isAdmin;
+
     const updatedUser = await user.save();
     res.status(200).json({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      photo: updatedUser.photo,
-      phone: updatedUser.phone,
-      bio: updatedUser.bio,
+      isMember: updatedUser.isMember,
+      isAdmin: updatedUser.isAdmin,
     });
   } else {
     res.status(404);
