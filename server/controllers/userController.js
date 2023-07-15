@@ -14,12 +14,12 @@ const registerUser = [
     .trim()
     .isLength({ min: 3 })
     .escape()
-    .withMessage("Name must be 3 or more characters."),
+    .withMessage("Name must be 3 or more characters"),
   body("password")
     .trim()
     .isLength({ min: 6, max: 24 })
-    .withMessage("Password must be between 6 and 24 characters."),
-  body("email").trim().isEmail().withMessage("Email must be valid."),
+    .withMessage("Password must be between 6 and 24 characters"),
+  body("email").trim().isEmail().withMessage("Email must be valid"),
   asyncHandler(async (req, res) => {
     // extract the validation errors from a request
     const errors = validationResult(req);
@@ -73,11 +73,11 @@ const registerUser = [
 
 const loginUser = [
   // validate and sanitize fields
-  body("email").trim().isEmail().withMessage("Email must be valid."),
+  body("email").trim().isEmail().withMessage("Invalid email or password"),
   body("password")
     .trim()
     .isLength({ min: 6, max: 24 })
-    .withMessage("Password must be between 6 and 24 characters."),
+    .withMessage("Invalid email or password"),
 
   asyncHandler(async (req, res) => {
     // extract the validation errors from a request
@@ -137,8 +137,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
+  try {
+    const user = await User.findById(req.user._id);
     const { _id, name, email, isMember, isAdmin } = user;
     res.status(200).json({
       _id,
@@ -147,7 +147,7 @@ const getUser = asyncHandler(async (req, res) => {
       isMember,
       isAdmin,
     });
-  } else {
+  } catch {
     res.status(400);
     throw new Error("User not found");
   }
