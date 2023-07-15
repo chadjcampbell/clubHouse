@@ -45,10 +45,10 @@ const deleteMessage = asyncHandler(async (req, res) => {
 
     // remove from mongodb
     await message.deleteOne();
-    res.status(200).json({ message: "Product deleted" });
+    res.status(200).json({ message: "Message deleted" });
   } catch (error) {
     res.status(400);
-    throw new Error("Error, product deletion failed");
+    throw new Error("Error, message deletion failed");
   }
 });
 
@@ -85,6 +85,7 @@ const updateMessage = [
 
     // update message
     const updatedMessage = await Message.findByIdAndUpdate(
+      { _id: id },
       {
         message,
       },
