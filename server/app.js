@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
+const messageRoute = require("./routes/messageRoute");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
@@ -22,6 +23,7 @@ app.use(
 
 // routes middleware
 app.use("/api/users", userRoute);
+app.use("/api/messages", messageRoute);
 
 // routes
 app.get("/", (req, res) => {
