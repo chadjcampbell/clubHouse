@@ -1,5 +1,9 @@
-import { ChangeEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Input, Ripple, initTE } from "tw-elements";
+import LoadingSpinner from "../components/LoadingSpinner";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const initialState = {
   email: "",
@@ -7,14 +11,35 @@ const initialState = {
 };
 
 const Login = () => {
+  initTE({ Input, Ripple });
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
     setFormData({ ...formData, [event.target.name]: value });
   };
 
-  return (
+  const handleSubmit = async (e: FormEvent) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:3000/api/users/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      navigate("/dashboard");
+    } catch {
+      toast.error("Invalid username or password");
+      setFormData(initialState);
+      setLoading(false);
+    }
+  };
+
+  return loading ? (
+    <LoadingSpinner />
+  ) : (
     <section className="h-screen">
       <div className="container h-full px-6 py-24">
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
@@ -23,9 +48,8 @@ const Login = () => {
               <img src="/treehouse.webp" className="w-full" alt="Phone image" />
             </Link>
           </div>
-
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
-            <form>
+            <form autoComplete="off" onSubmit={handleSubmit}>
               <div className="relative mb-6" data-te-input-wrapper-init>
                 <input
                   onChange={handleInputChange}
@@ -33,7 +57,7 @@ const Login = () => {
                   className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                   name="email"
                   id="email"
-                  value={formData.email}
+                  placeholder="Email address"
                 />
                 <label
                   htmlFor="email"
