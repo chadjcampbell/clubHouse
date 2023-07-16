@@ -25,14 +25,10 @@ const Login = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost:3000/api/users/login",
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-        { withCredentials: true }
-      );
+      await axios.post("http://localhost:3000/api/users/login", {
+        email: formData.email,
+        password: formData.password,
+      });
       navigate("/dashboard");
     } catch {
       toast.error("Invalid username or password");
@@ -49,7 +45,11 @@ const Login = () => {
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
             <Link to="/">
-              <img src="/treehouse.webp" className="w-full" alt="Phone image" />
+              <img
+                src="/treehouse.webp"
+                className="w-full"
+                alt="Clubhouse logo"
+              />
             </Link>
           </div>
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12">

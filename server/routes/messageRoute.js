@@ -9,7 +9,7 @@ const {
 const router = express.Router();
 
 router.post("/", protect, createMessage);
-router.get("/", protect, getMessages);
+router.get("/", getMessages);
 router.delete("/:id", protect, deleteMessage);
 router.patch("/:id", protect, updateMessage);
 

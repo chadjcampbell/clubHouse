@@ -26,7 +26,7 @@ const createMessage = [
 
 // get all messages
 const getMessages = asyncHandler(async (req, res) => {
-  const products = await Message.find().sort("-createdAt");
+  const products = await Message.find().populate("user").sort("-createdAt");
   res.status(200).json(products);
 });
 

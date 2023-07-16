@@ -7,6 +7,9 @@ import Login from "./pages/Login";
 import Membership from "./pages/Membership";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 export default function App() {
   return (
