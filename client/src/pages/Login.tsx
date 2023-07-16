@@ -25,10 +25,14 @@ const Login = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/users/login", {
-        email: formData.email,
-        password: formData.password,
-      });
+      await axios.post(
+        "http://localhost:3000/api/users/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        { withCredentials: true }
+      );
       navigate("/dashboard");
     } catch {
       toast.error("Invalid username or password");

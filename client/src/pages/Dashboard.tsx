@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -9,10 +10,15 @@ const Dashboard = () => {
   //TODO pick up here!
   useEffect(() => {
     const getUser = async () => {
-      const loggedInUser = await axios.get(
-        "http://localhost:3000/api/users/getUser"
-      );
-      console.log(loggedInUser.data);
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/users/getUser",
+          { withCredentials: true }
+        );
+        setUser(response.data);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
     };
     getUser();
   }, []);
