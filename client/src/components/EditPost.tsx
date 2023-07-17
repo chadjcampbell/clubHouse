@@ -1,7 +1,6 @@
 import { Modal, Ripple, initTE } from "tw-elements";
 import { PostType } from "../pages/Dashboard";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -11,7 +10,6 @@ type EditPostProps = {
 
 const EditPost = ({ post }: EditPostProps) => {
   initTE({ Modal, Ripple });
-  const navigate = useNavigate();
   const [editedPost, setEditedPost] = useState(post.message);
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -25,8 +23,8 @@ const EditPost = ({ post }: EditPostProps) => {
       await axios.patch("http://localhost:3000/api/messages/" + post._id, {
         message: editedPost,
       });
-
       location.reload();
+      toast.success("Post edited successfully");
     } catch {
       toast.error("Post edit failed");
     }
@@ -38,7 +36,7 @@ const EditPost = ({ post }: EditPostProps) => {
         type="button"
         className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
         data-te-toggle="modal"
-        data-te-target="#exampleModal"
+        data-te-target={"#exampleModal" + post._id}
         data-te-ripple-init
         data-te-ripple-color="light"
       >
@@ -47,9 +45,9 @@ const EditPost = ({ post }: EditPostProps) => {
       <div
         data-te-modal-init
         className="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
-        id="exampleModal"
+        id={"exampleModal" + post._id}
         tabIndex={-1}
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby={"exampleModalLabel" + post._id}
         aria-hidden="true"
       >
         <div
@@ -60,7 +58,7 @@ const EditPost = ({ post }: EditPostProps) => {
             <div className="flex flex-shrink-0 items-center justify-between rounded-t-md p-4">
               <h5
                 className="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
-                id="exampleModalLabel"
+                id={"exampleModalLabel" + post._id}
               >
                 Edit Post
               </h5>
