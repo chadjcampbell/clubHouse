@@ -26,16 +26,33 @@ const Register = () => {
   const handleSubmit = async (e: FormEvent) => {
     setLoading(true);
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Password and confirm must match");
+      setLoading(false);
+      return;
+    }
+    if (formData.password.length < 6 || formData.password.length > 24) {
+      toast.error("Password must be between 6 and 24 characters");
+      setLoading(false);
+      return;
+    }
+    if (formData.username.length < 3) {
+      toast.error("Username must be at least 3 characters");
+      setLoading(false);
+      return;
+    }
     try {
-      await axios.post("http://localhost:3000/api/users/login", {
+      await axios.post("http://localhost:3000/api/users/register", {
+        name: formData.username,
         email: formData.email,
         password: formData.password,
       });
       navigate("/dashboard");
-      toast.success("Successfully logged in");
-    } catch {
-      toast.error("Invalid username or password");
+      toast.success("Successfully registered");
+    } catch (error: any) {
+      toast.error(error.message);
       setFormData(initialState);
+    } finally {
       setLoading(false);
     }
   };
