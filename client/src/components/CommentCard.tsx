@@ -26,7 +26,7 @@ const CommentCard = ({ currentUser, post }: CommentCardProps) => {
       <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
         {currentUser?.isMember ? post.user.name : "Anon"}
       </h5>
-      <p className="break-all mb-4 text-base text-neutral-600 dark:text-neutral-200">
+      <p className="break-words mb-4 text-base text-neutral-600 dark:text-neutral-200">
         {post.message}
       </p>
       {currentUser?.isMember && (
