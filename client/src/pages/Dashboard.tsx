@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/LoadingSpinner";
 import CommentCard from "../components/CommentCard";
+import AddPost from "../components/AddPost";
 
 export type UserType = {
   _id: string;
@@ -54,6 +55,7 @@ const Dashboard = () => {
   const logout = async () => {
     await axios.get("http://localhost:3000/api/users/logout");
     navigate("/");
+    toast.success("Successfully logged out");
   };
 
   return loading ? (
@@ -117,6 +119,23 @@ const Dashboard = () => {
           Clubhouse posts <br />
           <span className="text-primary">only members can see who's who</span>
         </h1>
+
+        {user && (
+          <div className="bg-neutral-50 py-6 px-6 text-center dark:bg-neutral-900">
+            <AddPost />
+            {!user.isMember && (
+              <Link
+                className="inline-block rounded px-12 pt-4 pb-3.5 text-sm font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:bg-neutral-500 hover:bg-opacity-10 hover:text-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:text-primary-700 dark:hover:bg-neutral-800 dark:hover:bg-opacity-60"
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                to="/membership"
+                role="button"
+              >
+                Join the club
+              </Link>
+            )}
+          </div>
+        )}
         <div className="w-full flex flex-col justify-center items-center">
           {posts?.map((post) => (
             <CommentCard key={post._id} post={post} currentUser={user} />
