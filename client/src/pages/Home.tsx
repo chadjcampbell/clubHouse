@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+//TODO - make Auth wrapper to share user in header for Home and Dashboard
+
 const Home = () => {
   return (
     <section className="mb-40">
