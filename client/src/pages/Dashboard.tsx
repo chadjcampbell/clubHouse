@@ -36,7 +36,7 @@ const Dashboard = () => {
         );
         setUser(response.data);
       } catch (error: any) {
-        toast.warning("Log in to make a post");
+        console.log(error);
       }
     };
     const getPosts = async () => {
@@ -62,6 +62,7 @@ const Dashboard = () => {
           Clubhouse posts <br />
           <span className="text-primary">only members can see who's who</span>
         </h1>
+        {!user && <h2 className="mb-4 text-xl">Log in to make a post</h2>}
         {user && (
           <div className="bg-neutral-50 py-6 px-6 text-center dark:bg-neutral-900">
             <AddPost />

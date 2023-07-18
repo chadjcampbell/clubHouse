@@ -23,7 +23,7 @@ const HeaderNav = ({ user }: HeaderNavProps) => {
       >
         <div className="flex w-full flex-wrap items-center justify-between px-6">
           <div className="flex items-center">
-            <Link to="/dashboard">
+            <Link to="/">
               <img
                 className="h-10 w-10"
                 src="/treehouse.webp"
